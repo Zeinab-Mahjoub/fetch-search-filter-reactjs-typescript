@@ -9,18 +9,38 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import {matchSorter} from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 import useStyles2 from './styles2';
+import { User } from "./types/user";
 
 const App = () => {
   const classes = useStyles();
   const classes2 = useStyles2();
-  const [filter, setFilter] = React.useState('');
-  const [foo, setFoo] = useState<any[]>([]);
+  const [foo, setFoo] = useState<User[]>([]);
+  const [filterGender, setFilterGender] = React.useState('');
+
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setFilter(event.target.value as string);
+    setFilterGender(event.target.value as string);
+    console.log(filterGender);
   }
+
+  // --------------- match sorter ---------------
+  function matchSorterAcrossKeys(list: any[], search: string, options: { keys: string[] }) {
+    const joinedKeysString = (item: any) => options.keys.map(key => item[key]).join(' ');
+    return matchSorter(list, search, {
+      ...options,
+      keys: [...options.keys, joinedKeysString],
+    });
+  }
+
+  const handleChangeInput = (event: React.ChangeEvent<{ value: unknown }>) => {
+    let value = (event.target.value as string);
+
+    const nameMatches = matchSorterAcrossKeys(foo, value, { keys: ['first_name', 'last_name',] });
+    console.log(nameMatches);
+  }
+  // --------------- end match sorter ---------------
 
   useEffect(() => {
     fetch('http://localhost:4000/users')
@@ -28,11 +48,9 @@ const App = () => {
         return res.json()
           .then(data => {
             setFoo(data);
-          })
-      })
-  }, [])
-
-  console.log(matchSorter(foo, 'Trace Grinaugh', {keys: ['first_name', 'last_name']}))
+          });
+      });
+  }, []);
 
   return (
     <>
@@ -52,6 +70,7 @@ const App = () => {
               <SearchIcon />
             </div>
             <InputBase
+              onChange={handleChangeInput}
               placeholder="Search…"
               classes={{
                 root: classes2.inputRoot,
@@ -61,30 +80,35 @@ const App = () => {
             />
           </div>
 
-          {/* select gender */}
+          {/*--------------- filter select gender -------------*/}
+
           <FormControl className={classes2.formControl}>
             <InputLabel shrink id="demo-simple-select-placeholder-label-label">
               Gender filter
             </InputLabel>
+
             <Select
               labelId="demo-simple-select-placeholder-label-label"
               id="demo-simple-select-placeholder-label"
-              value={filter}
+              value={filterGender}
               onChange={handleChange}
               displayEmpty
               className={classes2.selectEmpty}
             >
-              <MenuItem value="all">
+              <MenuItem value="">
                 <em>All</em>
               </MenuItem>
-              <MenuItem value={10}>Male</MenuItem>
-              <MenuItem value={20}>Female</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
             </Select>
+
             <FormHelperText>Select gender</FormHelperText>
           </FormControl>
 
         </Toolbar>
       </AppBar>
+
+      {/*----------------- users and results ----------------*/}
       <main>
         <div className={classes.container}>
           <Container maxWidth="sm" >
@@ -122,6 +146,8 @@ const App = () => {
           </Grid>
         </Container>
       </main>
+
+      {/*---------------------------- footer ----------------------------*/}
       <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
           Footer
