@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Typography, AppBar, Card, CardActions, CardContent, CardMedia, CssBaseline, Grid, Toolbar, Container, Button } from "@material-ui/core";
+import { Typography, AppBar, Card, CardContent, CardMedia, CssBaseline, Grid, Toolbar, Container } from "@material-ui/core";
 import { Group } from "@material-ui/icons";
 import useStyles from './styles';
-import { alpha, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -16,11 +15,11 @@ import useStyles2 from './styles2';
 const App = () => {
   const classes = useStyles();
   const classes2 = useStyles2();
-  const [age, setAge] = React.useState('');
+  const [filter, setFilter] = React.useState('');
   const [foo, setFoo] = useState<any[]>([]);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAge(event.target.value as string);
+    setFilter(event.target.value as string);
   }
 
   useEffect(() => {
@@ -70,7 +69,7 @@ const App = () => {
             <Select
               labelId="demo-simple-select-placeholder-label-label"
               id="demo-simple-select-placeholder-label"
-              value={age}
+              value={filter}
               onChange={handleChange}
               displayEmpty
               className={classes2.selectEmpty}
