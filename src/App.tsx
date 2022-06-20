@@ -37,6 +37,7 @@ const App = () => {
         return res.json()
           .then(data => {
             setUsers(data);
+            setFilteredUsers(data);
           });
       });
   }, []);
@@ -137,7 +138,7 @@ const App = () => {
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
-            {users?.map((record) => (
+            {filteredUsers?.map((record) => (
               <Grid item key={record.id} xs={12} sm={6} md={4}>
 
                 <Card className={classes.card}>
