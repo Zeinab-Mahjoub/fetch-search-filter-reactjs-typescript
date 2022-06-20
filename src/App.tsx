@@ -61,10 +61,25 @@ const App = () => {
   
   // --------- when genderFilter or searchInput changes ------------
   useEffect(() => {
-    let nameMatches = matchSorterAcrossKeys(users, inputSearch, { keys: ['first_name', 'last_name',] });
-    setFilteredUsers(nameMatches);
+    if (inputSearch && !filterGender) {
 
-    
+      let nameMatches = matchSorterAcrossKeys(users, inputSearch, { keys: ['first_name', 'last_name',] });
+      setFilteredUsers(nameMatches);
+
+    } else if (!inputSearch && filterGender) {
+
+      let genderMatches = matchSorter(users, filterGender, {
+        keys: [{threshold: matchSorter.rankings.STARTS_WITH, key: 'gender'}],
+      });
+      setFilteredUsers(genderMatches);
+
+    } else if (inputSearch && filterGender) {
+
+      let nameAndGenderMatches = matchSorter(matchSorterAcrossKeys(users, inputSearch, { keys: ['first_name', 'last_name',] }), filterGender, { keys: [{threshold: matchSorter.rankings.STARTS_WITH, key: 'gender'}]});
+
+      setFilteredUsers(nameAndGenderMatches);
+
+    }
  
   }, [inputSearch, filterGender]);
   // --------- end when genderFilter or searchInput changes ------------
