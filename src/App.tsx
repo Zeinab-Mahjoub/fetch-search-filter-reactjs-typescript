@@ -17,6 +17,9 @@ const App = () => {
   const classes = useStyles();
   const classes2 = useStyles2();
 
+  // variables
+  let inputValue = '';
+
   //------------------- states --------------------
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -48,18 +51,20 @@ const App = () => {
   }
 
   const handleChangeInput = (event: React.ChangeEvent<{ value: unknown }>) => {
-    let value = (event.target.value as string);
-    setInputSearch(value);
+    inputValue = (event.target.value as string);
+    setInputSearch(inputValue);
 
-    let nameMatches = matchSorterAcrossKeys(users, value, { keys: ['first_name', 'last_name',] });
-    console.log(nameMatches);
   }
   // --------------- end match-sorter ---------------
-
-
+  
+  
   // --------- when genderFilter or searchInput changes ------------
   useEffect(() => {
+    let nameMatches = matchSorterAcrossKeys(users, inputSearch, { keys: ['first_name', 'last_name',] });
+    setFilteredUsers(nameMatches);
+
     
+ 
   }, [inputSearch, filterGender]);
   // --------- end when genderFilter or searchInput changes ------------
 
