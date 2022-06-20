@@ -16,16 +16,29 @@ import { User } from "./types/user";
 const App = () => {
   const classes = useStyles();
   const classes2 = useStyles2();
-  const [foo, setFoo] = useState<User[]>([]);
+
+  //------------------- states --------------------
+  const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [inputSearch, setInputSearch] = React.useState('');
   const [filterGender, setFilterGender] = React.useState('');
 
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChangeSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
     setFilterGender(event.target.value as string);
-    console.log(filterGender);
   }
 
-  // --------------- match sorter ---------------
+  useEffect(() => {
+    fetch('http://localhost:4000/users')
+      .then(res => {
+        return res.json()
+          .then(data => {
+            setUsers(data);
+          });
+      });
+  }, []);
+
+  // --------------- match-sorter ---------------
   function matchSorterAcrossKeys(list: any[], search: string, options: { keys: string[] }) {
     const joinedKeysString = (item: any) => options.keys.map(key => item[key]).join(' ');
     return matchSorter(list, search, {
@@ -36,21 +49,20 @@ const App = () => {
 
   const handleChangeInput = (event: React.ChangeEvent<{ value: unknown }>) => {
     let value = (event.target.value as string);
+    setInputSearch(value);
 
-    const nameMatches = matchSorterAcrossKeys(foo, value, { keys: ['first_name', 'last_name',] });
+    let nameMatches = matchSorterAcrossKeys(users, value, { keys: ['first_name', 'last_name',] });
     console.log(nameMatches);
   }
-  // --------------- end match sorter ---------------
+  // --------------- end match-sorter ---------------
 
+
+  // --------- when genderFilter or searchInput changes ------------
   useEffect(() => {
-    fetch('http://localhost:4000/users')
-      .then(res => {
-        return res.json()
-          .then(data => {
-            setFoo(data);
-          });
-      });
-  }, []);
+    
+  }, [inputSearch, filterGender]);
+  // --------- end when genderFilter or searchInput changes ------------
+
 
   return (
     <>
@@ -91,7 +103,7 @@ const App = () => {
               labelId="demo-simple-select-placeholder-label-label"
               id="demo-simple-select-placeholder-label"
               value={filterGender}
-              onChange={handleChange}
+              onChange={handleChangeSelect}
               displayEmpty
               className={classes2.selectEmpty}
             >
@@ -120,7 +132,7 @@ const App = () => {
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
-            {foo?.map((record) => (
+            {users?.map((record) => (
               <Grid item key={record.id} xs={12} sm={6} md={4}>
 
                 <Card className={classes.card}>
