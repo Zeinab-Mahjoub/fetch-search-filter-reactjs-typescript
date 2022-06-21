@@ -3,7 +3,6 @@ import {
   Typography,
   AppBar,
   CssBaseline,
-  Grid,
   Toolbar,
   Container,
 } from "@material-ui/core";
@@ -62,21 +61,21 @@ const UsersList = () => {
 
   // --------- when genderFilter or searchInput changes ------------
   useEffect(() => {
-    let newFilteredusers = users;
+    let newFilteredUsers = users;
 
     // Step1: filter based on search input
-    newFilteredusers = matchSorterAcrossKeys(newFilteredusers, inputSearch, {
+    newFilteredUsers = matchSorterAcrossKeys(newFilteredUsers, inputSearch, {
       keys: ["first_name", "last_name"],
     });
 
     // step2:
     if (filterGender) {
-      newFilteredusers = matchSorter(newFilteredusers, filterGender, {
+      newFilteredUsers = matchSorter(newFilteredUsers, filterGender, {
         keys: [{ threshold: matchSorter.rankings.EQUAL, key: "gender" }],
       });
     }
 
-    setFilteredUsers([...newFilteredusers]);
+    setFilteredUsers([...newFilteredUsers]);
   }, [inputSearch, filterGender]);
   // --------- end when genderFilter or searchInput changes ------------
 
