@@ -1,0 +1,16 @@
+.cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  width: 90%;
+  margin: auto;
+  margin-top: 24px;
+}
+
+.itemBox {
+  border: 1px solid #e1e1e1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
