@@ -79,8 +79,9 @@ const App = () => {
 
       setFilteredUsers(nameAndGenderMatches);
 
+    } else if (!inputSearch && !filterGender) {
+      setFilteredUsers(users);
     }
- 
   }, [inputSearch, filterGender]);
   // --------- end when genderFilter or searchInput changes ------------
 
